@@ -1,0 +1,98 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  username     String   @unique
+  passwordHash String
+  role         Role     @default(MEMBER)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+enum Role {
+  ADMIN
+  MEMBER
+}
+
+model ClubData {
+  id                 String          @id @default(auto()) @map("_id") @db.ObjectId
+  heroTitleSanskrit  String          @default("प्रौद्योगिकी संघ")
+  heroTitleEnglish   String          @default("Technology Club")
+  aboutHeadline      String          @default("Celebrating Faculty Family & Culture")
+  aboutText          String          @default("")
+  announcements      Announcement[]
+  events             Event[]
+  galleryFrames      GalleryFrame[]
+  executives         Executive[]
+  qrCodeKey          String          @default("")
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+}
+
+type Announcement {
+  id   String 
+  text String
+}
+
+type Event {
+  id       String 
+  title    String
+  date     String
+  location String
+  desc     String
+}
+
+type GalleryFrame {
+  id      String
+  mediaKey String
+  caption String @default("")
+}
+
+type Executive {
+  id    Int
+  role     String
+  name     String
+  photoKey String
+}
+
+model Post {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  author     String
+  timestamp  String
+  text       String
+  mediaType  String    @default("image")
+  mediaKey   String    @default("")
+  likes      Int       @default(0)
+  comments   Comment[]
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+type Comment {
+  author String
+  text   String
+}
+
+model Booking {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  bookingId         String   @unique
+  memberName        String
+  employeeCode      String
+  userCategory      String   @default("Club Member")
+  forumName         String?
+  contactNo         String?
+  date              String
+  slot              String
+  status            String   @default("Pending")
+  paymentRef           String?
+  paymentScreenshotKey String?
+  createdAt            DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
