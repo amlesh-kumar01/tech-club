@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
+import { deleteCloudinaryMedia } from '@/lib/cloudinary';
 
 export async function GET() {
   try {
@@ -31,6 +32,14 @@ export async function DELETE(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get('id');
     if (!id) return NextResponse.json({ error: 'ID required' }, { status: 400 });
+
+    const post = await prisma.post.findUnique({ where: { id } });
+    if (!post) return NextResponse.json({ error: 'Post not found' }, { status: 404 });
+
+    // If the post has a media attachment, delete it from Cloudinary to free up storage
+    if (post.mediaUrl) {
+      await deleteCloudinaryMedia(post.mediaUrl, post.mediaType === 'video' ? 'video' : 'image');
+    }
 
     await prisma.post.delete({ where: { id } });
     return NextResponse.json({ success: true });
