@@ -130,7 +130,7 @@ export default function FacilityBooking({
                 </h5>
                 <div className="flex flex-col sm:flex-row gap-5 items-center">
                   <div className="relative group rounded-xl overflow-hidden shadow-sm border border-emerald-100 bg-white">
-                    <img src={getMediaUrl(clubData.qrCodeKey)} alt="Payment QR Code" className="w-full object-contain h-64" />
+                    <img src={getMediaUrl(clubData.qrCodeUrl)} alt="Payment QR Code" className="w-full object-contain h-64" />
                     {isAdmin && (
                       <label className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-[10px] text-white font-bold cursor-pointer rounded-xl">
                         Change QR
@@ -152,11 +152,8 @@ export default function FacilityBooking({
                     <div>
                       <label className="block text-[10px] text-slate-400 uppercase tracking-wider mb-1 font-semibold">Upload Payment Screen Capture</label>
                       <div className="bg-white border-2 border-dashed border-emerald-200 rounded-xl p-4 flex flex-col items-center justify-center min-h-[200px] text-center relative group">
-                        {bookingForm.paymentScreenshotKey ? (
-                          <>
-                            <img src={getMediaUrl(bookingForm.paymentScreenshotKey)} alt="Screenshot" className="w-full h-40 object-cover rounded-lg mb-2" />
-                            <span className="text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded">Screenshot Uploaded</span>
-                          </>
+                        {bookingForm.paymentScreenshotUrl ? (
+                          <a href={getMediaUrl(bookingForm.paymentScreenshotUrl)} target="_blank" rel="noreferrer" className="text-emerald-600 text-xs font-bold underline">View Screenshot</a>
                         ) : (
                           <input
                             type="file" accept="image/*" required
@@ -242,7 +239,7 @@ export default function FacilityBooking({
 
                     {pending.userCategory !== 'Club Member' && pending.paymentRef && (
                       <div className="bg-slate-950 p-2.5 rounded flex items-center gap-3">
-                        <img src={getMediaUrl(pending.paymentScreenshotKey)} alt="Payment Receipt" className="w-14 h-14 object-cover rounded cursor-pointer border border-slate-700 hover:scale-150 transition-transform origin-left" />
+                        <img src={getMediaUrl(pending.paymentScreenshotUrl)} alt="Payment Receipt" className="w-14 h-14 object-cover rounded cursor-pointer border border-slate-700 hover:scale-150 transition-transform origin-left" />
                         <div>
                           <span className="text-[10px] text-slate-500 uppercase tracking-widest block mb-0.5">Txn ID Provided</span>
                           <span className="text-xs font-mono font-bold text-emerald-400 bg-emerald-900/30 px-2 py-0.5 rounded">{pending.paymentRef}</span>

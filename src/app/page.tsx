@@ -35,7 +35,7 @@ export default function App() {
   const [newPostMediaType, setNewPostMediaType] = useState('image');
 
   const [bookingForm, setBookingForm] = useState({
-    memberName: '', employeeCode: '', userCategory: 'Club Member', forumName: '', contactNo: '', date: '', slot: '09:00 AM - 01:00 PM', paymentRef: '', paymentScreenshotKey: null
+    memberName: '', employeeCode: '', userCategory: 'Club Member', forumName: '', contactNo: '', date: '', slot: '09:00 AM - 01:00 PM', paymentRef: '', paymentScreenshotUrl: null
   });
 
   const updateCMSField = async (key: string, value: any) => {
@@ -61,18 +61,18 @@ export default function App() {
       
       if (field === 'executives') {
         const newExecs = [...clubData.executives];
-        newExecs[index].photoKey = key;
+        newExecs[index].photoUrl = key;
         updateCMSField('executives', newExecs);
         triggerFeedback('success', 'Profile photo updated!');
       } else if (field === 'gallery') {
         const newFrames = [...clubData.galleryFrames];
-        newFrames[index].mediaKey = key;
+        newFrames[index].mediaUrl = key;
         updateCMSField('galleryFrames', newFrames);
         triggerFeedback('success', 'Gallery memory updated!');
       } else if (field === 'feed') {
         setNewPostMedia(key);
       } else if (field === 'qr') {
-        updateCMSField('qrCodeKey', key);
+        updateCMSField('qrCodeUrl', key);
         triggerFeedback('success', 'Deposit QR code updated permanently!');
       }
     }
@@ -110,7 +110,7 @@ export default function App() {
       timestamp: "Just now",
       text: newPostText,
       mediaType: newPostMediaType,
-      mediaKey: newPostMedia || "",
+      mediaUrl: newPostMedia || "",
       likes: 0,
       comments: []
     };
@@ -166,7 +166,7 @@ export default function App() {
   const handleBookingSubmit = async (e: any) => {
     e.preventDefault();
     const isExternal = bookingForm.userCategory !== 'Club Member';
-    if (isExternal && (!bookingForm.paymentRef || !bookingForm.paymentScreenshotKey)) {
+    if (isExternal && (!bookingForm.paymentRef || !bookingForm.paymentScreenshotUrl)) {
       triggerFeedback('error', 'Payment Reference ID and Screenshot are strictly mandatory for your category.');
       return;
     }
@@ -187,7 +187,7 @@ export default function App() {
       const created = await res.json();
       setBookings([created, ...bookings]);
       triggerFeedback('success', "Reservation submitted and is pending administrative review.");
-      setBookingForm({ memberName: '', employeeCode: '', userCategory: 'Club Member', forumName: '', contactNo: '', date: '', slot: '09:00 AM - 01:00 PM', paymentRef: '', paymentScreenshotKey: null });
+      setBookingForm({ memberName: '', employeeCode: '', userCategory: 'Club Member', forumName: '', contactNo: '', date: '', slot: '09:00 AM - 01:00 PM', paymentRef: '', paymentScreenshotUrl: null });
     } else {
       const err = await res.json();
       triggerFeedback('error', err.error || 'Failed to submit booking');
@@ -199,7 +199,7 @@ export default function App() {
     if (file) {
       triggerFeedback('success', 'Uploading screenshot...');
       const key = await uploadFile(file);
-      if (key) setBookingForm({ ...bookingForm, paymentScreenshotKey: key });
+      if (key) setBookingForm({ ...bookingForm, paymentScreenshotUrl: key });
     }
   };
 

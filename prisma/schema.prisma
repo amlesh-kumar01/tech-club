@@ -10,6 +10,7 @@ datasource db {
 model User {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   username     String   @unique
+  email        String   @unique
   passwordHash String
   role         Role     @default(MEMBER)
   createdAt    DateTime @default(now())
@@ -31,7 +32,7 @@ model ClubData {
   events             Event[]
   galleryFrames      GalleryFrame[]
   executives         Executive[]
-  qrCodeKey          String          @default("")
+  qrCodeUrl          String          @default("")
   createdAt          DateTime        @default(now())
   updatedAt          DateTime        @updatedAt
 }
@@ -51,7 +52,7 @@ type Event {
 
 type GalleryFrame {
   id      String
-  mediaKey String
+  mediaUrl String
   caption String @default("")
 }
 
@@ -59,7 +60,7 @@ type Executive {
   id    Int
   role     String
   name     String
-  photoKey String
+  photoUrl String
 }
 
 model Post {
@@ -68,7 +69,7 @@ model Post {
   timestamp  String
   text       String
   mediaType  String    @default("image")
-  mediaKey   String    @default("")
+  mediaUrl   String    @default("")
   likes      Int       @default(0)
   comments   Comment[]
   createdAt  DateTime  @default(now())
@@ -92,7 +93,7 @@ model Booking {
   slot              String
   status            String   @default("Pending")
   paymentRef           String?
-  paymentScreenshotKey String?
+  paymentScreenshotUrl String?
   createdAt            DateTime @default(now())
   updatedAt         DateTime @updatedAt
 }

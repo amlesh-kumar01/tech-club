@@ -89,7 +89,7 @@ export default function FrontDesk({
           onClick={() => setEnlargedFrame(null)}
         >
           <div className="relative max-w-5xl w-full" onClick={e => e.stopPropagation()}>
-            <img src={getMediaUrl(enlargedFrame.mediaKey)} className="w-full h-auto max-h-[85vh] object-contain rounded-lg shadow-2xl" alt="Enlarged" />
+            <img src={getMediaUrl(enlargedFrame.mediaUrl)} className="w-full h-auto max-h-[85vh] object-contain rounded-lg shadow-2xl" alt="Enlarged" />
             <p className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black/80 to-transparent text-white text-center font-semibold text-lg rounded-b-lg">
               {enlargedFrame.caption}
             </p>
@@ -319,7 +319,7 @@ export default function FrontDesk({
                 className={`jigsaw-frame relative group ${spanClass} ${isSource ? 'opacity-90 scale-[1.03] shadow-2xl z-50' : 'hover:scale-[1.01] shadow-sm z-20'} ${isTarget ? 'opacity-60 z-30' : ''}`}
               >
                 <div className="w-full h-full rounded-2xl overflow-hidden border-[8px] border-[#0f172a]/80 bg-slate-200 relative shadow-md">
-                  <img src={getMediaUrl(frame.mediaKey)} className="w-full h-full object-cover pointer-events-none" draggable="false" alt="Gallery Frame" />
+                  <img src={getMediaUrl(frame.mediaUrl)} className="w-full h-full object-cover pointer-events-none" draggable="false" alt="Gallery Frame" />
                   
                   <div className={`absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/90 via-slate-900/40 to-transparent p-2 transition-opacity ${isSource ? 'opacity-0' : 'opacity-0 group-hover:opacity-100'}`}>
                     {isAdmin ? (

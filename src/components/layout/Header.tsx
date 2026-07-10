@@ -1,6 +1,8 @@
 'use client';
 import React, { useState } from 'react';
 import { HomeIcon, UsersIcon, FeedIcon, BookingIcon, ShieldCheckIcon, LockIcon } from '../ui/Icons';
+import { auth, googleProvider } from '@/lib/firebase';
+import { signInWithPopup } from 'firebase/auth';
 
 export default function Header({ activeTab, setActiveTab, isAdmin, setIsAdmin, clubData }: any) {
   const [showAdminModal, setShowAdminModal] = useState(false);
@@ -17,22 +19,29 @@ export default function Header({ activeTab, setActiveTab, isAdmin, setIsAdmin, c
     }
   };
 
-  const verifyAdminPassword = async () => {
+  const handleGoogleSignIn = async () => {
     try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const idToken = await result.user.getIdToken();
+
       const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: 'admin', password: adminPassword })
+        body: JSON.stringify({ idToken })
       });
-      if (res.ok) {
+      
+      const data = await res.json();
+      
+      if (res.ok && data.success) {
         setIsAdmin(true);
         setShowAdminModal(false);
-        setAdminPassword('');
       } else {
-        alert('Incorrect Password!');
+        alert(data.error || 'Authentication Failed');
+        auth.signOut(); // Ensure client is signed out if server rejected
       }
-    } catch (e) {
-      alert('Login error');
+    } catch (error) {
+      console.error('Login error:', error);
+      alert('Google Sign-In was cancelled or failed.');
     }
   };
 
@@ -79,19 +88,25 @@ export default function Header({ activeTab, setActiveTab, isAdmin, setIsAdmin, c
             {!forgotPasswordMode ? (
               <>
                 <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2 mb-2"><LockIcon /> Administrator Access</h3>
-                <p className="text-xs text-slate-500 mb-6 leading-relaxed">Authenticate to manage notices, approve reservations, and customize gallery.</p>
-                <input type="password" placeholder="Enter passcode" value={adminPassword} onChange={(e) => setAdminPassword(e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2.5 text-slate-800 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent mb-4" onKeyDown={(e) => e.key === 'Enter' && verifyAdminPassword()} />
+                <p className="text-xs text-slate-500 mb-6 leading-relaxed">Authenticate with your authorized Google Account to manage notices, approve reservations, and customize gallery.</p>
+                
+                <div className="flex flex-col gap-3 mb-4">
+                  <button onClick={handleGoogleSignIn} className="w-full flex items-center justify-center gap-3 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-bold py-3 rounded-lg shadow-sm transition-all">
+                    <svg className="w-5 h-5" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/><path d="M1 1h22v22H1z" fill="none"/></svg>
+                    Sign in with Google
+                  </button>
+                </div>
+
                 <div className="flex justify-between items-center mb-4">
-                  <button type="button" onClick={() => setForgotPasswordMode(true)} className="text-xs font-bold text-amber-700 hover:text-amber-900 hover:underline">Forgot Passcode?</button>
+                  <button type="button" onClick={() => setForgotPasswordMode(true)} className="text-xs font-bold text-amber-700 hover:text-amber-900 hover:underline">Help & Support</button>
                 </div>
                 <div className="flex justify-end gap-2">
-                  <button onClick={() => setShowAdminModal(false)} className="px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg text-sm font-semibold text-slate-600 transition-colors">Cancel</button>
-                  <button onClick={verifyAdminPassword} className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-sm font-bold transition-colors shadow-md">Authenticate</button>
+                  <button onClick={() => setShowAdminModal(false)} className="px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg text-sm font-semibold text-slate-600 transition-colors w-full">Cancel</button>
                 </div>
               </>
             ) : (
               <>
-                <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2 mb-2">🔑 Forgot Passcode?</h3>
+                <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2 mb-2">🛡️ Help & Support</h3>
                 <p className="text-xs text-slate-600 leading-relaxed mb-6">Contact the default administrator email ID: techclub@hijli.iitkgp.ac.in</p>
                 <div className="flex justify-end">
                   <button onClick={() => setForgotPasswordMode(false)} className="px-4 py-2 bg-slate-800 hover:bg-slate-950 rounded-lg text-sm font-bold text-white transition-colors">Back</button>

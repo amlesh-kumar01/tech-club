@@ -72,12 +72,12 @@ export default function SocialFeed({ feedPosts, isAdmin, createPost, deletePost,
               {post.text}
             </div>
 
-            {post.mediaKey && (
+            {post.mediaUrl && (
               <div className="mt-3 rounded-xl overflow-hidden border border-emerald-50 bg-emerald-50 shadow-inner">
                 {post.mediaType === 'image' ? (
-                  <img src={getMediaUrl(post.mediaKey)} alt="Post attachment" className="w-full max-h-96 object-cover" />
+                  <img src={getMediaUrl(post.mediaUrl)} alt="Post attachment" className="w-full max-h-96 object-cover" />
                 ) : (
-                  <video src={getMediaUrl(post.mediaKey)} controls className="w-full max-h-96 object-cover" />
+                  <video src={getMediaUrl(post.mediaUrl)} controls className="w-full max-h-96 object-cover" />
                 )}
               </div>
             )}

@@ -16,7 +16,7 @@ export default function Executives({ clubData, updateCMSField, isAdmin, handleMe
           <div key={exec.id} className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all group relative">
             <div className="aspect-[3/4] relative bg-slate-100 overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-t from-emerald-900 via-transparent to-transparent opacity-60 z-10"></div>
-              <img src={getMediaUrl(exec.photoKey)} alt={exec.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src={getMediaUrl(exec.photoUrl)} alt={exec.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
               
               {isAdmin && (
                 <label className="absolute top-3 right-3 bg-white text-slate-800 p-2 rounded-full cursor-pointer shadow-lg hover:bg-amber-100 z-40 transition-transform hover:scale-110">
