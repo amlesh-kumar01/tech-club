@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { login } from '@/lib/auth';
-import { adminAuth } from '@/lib/firebase-admin';
 
 export async function POST(req: NextRequest) {
   try {
@@ -11,14 +10,27 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Firebase ID Token is required' }, { status: 400 });
     }
 
-    if (!adminAuth) {
-      console.error('Firebase admin auth is not initialized (missing credentials)');
+    const apiKey = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
+    if (!apiKey) {
+      console.error('Firebase API key missing');
       return NextResponse.json({ error: 'Server authentication configuration error' }, { status: 500 });
     }
 
-    // Verify the Firebase ID token
-    const decodedToken = await adminAuth.verifyIdToken(idToken);
-    const userEmail = decodedToken.email;
+    // Verify the Firebase ID token using Google Identity Toolkit REST API
+    const response = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${apiKey}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ idToken })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.users || data.users.length === 0) {
+      console.error('Firebase token verification failed:', data);
+      return NextResponse.json({ error: 'Invalid or expired token' }, { status: 401 });
+    }
+
+    const userEmail = data.users[0].email;
 
     if (!userEmail) {
       return NextResponse.json({ error: 'No email found in token' }, { status: 401 });
