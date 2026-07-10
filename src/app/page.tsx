@@ -27,6 +27,13 @@ export default function App() {
     fetch('/api/club-data').then(res => res.json()).then(setClubData).catch(console.error);
     fetch('/api/posts').then(res => res.json()).then(setFeedPosts).catch(console.error);
     fetch('/api/bookings').then(res => res.json()).then(setBookings).catch(console.error);
+    
+    // Restore admin session
+    fetch('/api/auth/me').then(res => res.json()).then(data => {
+      if (data.user && data.user.role === 'ADMIN') {
+        setIsAdmin(true);
+      }
+    }).catch(console.error);
   }, []);
 
   // Dynamic Content Inputs
