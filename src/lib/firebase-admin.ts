@@ -3,8 +3,15 @@ import { getAuth } from 'firebase-admin/auth';
 
 if (!getApps().length) {
   try {
-    // Automatically uses GOOGLE_APPLICATION_CREDENTIALS from .env
-    initializeApp();
+    if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+      const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+      initializeApp({
+        credential: cert(serviceAccount)
+      });
+    } else {
+      // Automatically uses GOOGLE_APPLICATION_CREDENTIALS from .env for local dev
+      initializeApp();
+    }
   } catch (error) {
     console.error("Firebase admin initialization error:", error);
   }
