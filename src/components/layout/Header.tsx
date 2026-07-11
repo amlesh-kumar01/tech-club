@@ -61,18 +61,24 @@ export default function Header({ activeTab, setActiveTab, isAdmin, setIsAdmin, c
             </div>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-2">
-            <button onClick={() => setActiveTab('home')} className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${activeTab === 'home' ? 'bg-amber-100 text-amber-900 border border-amber-300 shadow-sm' : 'text-slate-600 hover:bg-slate-100'}`}>
-              <HomeIcon /> Front Desk
-            </button>
-            <button onClick={() => setActiveTab('execs')} className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${activeTab === 'execs' ? 'bg-amber-100 text-amber-900 border border-amber-300 shadow-sm' : 'text-slate-600 hover:bg-slate-100'}`}>
-              <UsersIcon /> Executives
-            </button>
-            <button onClick={() => setActiveTab('feed')} className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${activeTab === 'feed' ? 'bg-amber-100 text-amber-900 border border-amber-300 shadow-sm' : 'text-slate-600 hover:bg-slate-100'}`}>
-              <FeedIcon /> Social Feed
-            </button>
-            <button onClick={() => setActiveTab('booking')} className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${activeTab === 'booking' ? 'bg-indigo-50 text-indigo-800 border border-indigo-200 shadow-sm' : 'text-slate-600 hover:bg-slate-100'}`}>
-              <BookingIcon /> Facility Booking
-            </button>
+            <div className="hidden md:flex items-center gap-1">
+              {['home', 'feed', 'booking', 'forms'].map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${
+                    activeTab === tab
+                      ? 'bg-indigo-50 text-indigo-700 shadow-sm'
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-indigo-600'
+                  }`}
+                >
+                  {tab === 'home' && 'Front Desk'}
+                  {tab === 'feed' && 'Social Feed'}
+                  {tab === 'booking' && 'Facility Booking'}
+                  {tab === 'forms' && 'Forms & Rules'}
+                </button>
+              ))}
+            </div>
             <span className="h-6 w-[1px] bg-slate-300 mx-1 hidden sm:inline-block"></span>
             <button onClick={handleAdminToggle} className={`ml-1 px-3 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-1.5 border ${isAdmin ? 'bg-emerald-50 text-emerald-800 border-emerald-300 shadow-sm' : 'bg-white hover:bg-slate-50 text-slate-500 border-slate-200'}`}>
               {isAdmin ? <ShieldCheckIcon /> : <LockIcon />}

@@ -50,6 +50,17 @@ export async function PUT(req: NextRequest) {
       }
     }
 
+    // Find deleted forms and rules
+    if (updates.formsAndRules) {
+      const oldForms = currentData.formsAndRules?.map((f: any) => f.mediaUrl).filter(Boolean) || [];
+      const newForms = updates.formsAndRules.map((f: any) => f.mediaUrl).filter(Boolean);
+      const deletedForms = oldForms.filter((url: string) => !newForms.includes(url));
+      for (const url of deletedForms) {
+        // Forms are often PDFs, Cloudinary stores them as 'image' by default (for raw pdf, we might need 'image' or 'raw', usually 'image' for pdf).
+        await deleteCloudinaryMedia(url, 'image');
+      }
+    }
+
     // Check qrCodeUrl change
     if (updates.qrCodeUrl !== undefined && updates.qrCodeUrl !== currentData.qrCodeUrl && currentData.qrCodeUrl) {
       await deleteCloudinaryMedia(currentData.qrCodeUrl, 'image');

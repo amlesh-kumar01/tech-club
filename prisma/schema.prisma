@@ -31,6 +31,7 @@ model ClubData {
   announcements      Announcement[]
   events             Event[]
   galleryFrames      GalleryFrame[]
+  formsAndRules      GalleryFrame[]
   executives         Executive[]
   qrCodeUrl          String          @default("")
   createdAt          DateTime        @default(now())
@@ -91,6 +92,7 @@ model Booking {
   contactNo         String?
   date              String
   slot              String
+  acPreference      String   @default("Non-AC")
   status            String   @default("Pending")
   paymentRef           String?
   paymentScreenshotUrl String?

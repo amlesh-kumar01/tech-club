@@ -75,29 +75,41 @@ export default function FacilityBooking({
             </div>
 
             {bookingForm.userCategory !== 'Club Member' && (
-              <div className="grid grid-cols-2 gap-4 bg-indigo-50/50 p-4 rounded-xl border border-indigo-100 animate-in fade-in zoom-in duration-300">
-                <div>
-                  <label className="block text-[11px] text-indigo-700 font-bold uppercase tracking-wide mb-1">Forum Name <span className="text-rose-500">*</span></label>
-                  <input
-                    type="text" required
-                    value={bookingForm.forumName}
-                    onChange={(e) => setBookingForm({ ...bookingForm, forumName: e.target.value })}
-                    className="w-full bg-white border border-indigo-200 rounded-md px-3 py-2 text-sm text-slate-800 outline-none focus:border-indigo-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[11px] text-indigo-700 font-bold uppercase tracking-wide mb-1">Contact (Mobile No.) <span className="text-rose-500">*</span></label>
-                  <input
-                    type="tel" required
-                    value={bookingForm.contactNo}
-                    onChange={(e) => setBookingForm({ ...bookingForm, contactNo: e.target.value })}
-                    className="w-full bg-white border border-indigo-200 rounded-md px-3 py-2 text-sm text-slate-800 outline-none focus:border-indigo-500"
-                  />
-                </div>
+              <div className="bg-indigo-50/50 p-4 rounded-xl border border-indigo-100 animate-in fade-in zoom-in duration-300 mb-4">
+                <label className="block text-[11px] text-indigo-700 font-bold uppercase tracking-wide mb-1">Forum Name <span className="text-rose-500">*</span></label>
+                <input
+                  type="text" required
+                  value={bookingForm.forumName}
+                  onChange={(e) => setBookingForm({ ...bookingForm, forumName: e.target.value })}
+                  className="w-full bg-white border border-indigo-200 rounded-md px-3 py-2 text-sm text-slate-800 outline-none focus:border-indigo-500"
+                />
               </div>
             )}
 
-            <div className="grid grid-cols-2 gap-4 border-t border-slate-100 pt-4">
+            <div className="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
+              <div>
+                <label className="block text-[11px] text-slate-500 font-bold uppercase tracking-wide mb-1">Contact (Mobile No.) <span className="text-rose-500">*</span></label>
+                <input
+                  type="tel" required
+                  value={bookingForm.contactNo}
+                  onChange={(e) => setBookingForm({ ...bookingForm, contactNo: e.target.value })}
+                  className="w-full bg-white border border-slate-300 rounded-md px-3 py-2 text-sm text-slate-800 outline-none focus:border-indigo-400"
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] text-slate-500 font-bold uppercase tracking-wide mb-1">AC Preference <span className="text-rose-500">*</span></label>
+                <select
+                  value={bookingForm.acPreference || 'Non-AC'}
+                  onChange={(e) => setBookingForm({ ...bookingForm, acPreference: e.target.value })}
+                  className="w-full bg-white border border-slate-300 rounded-md px-3 py-2 text-sm text-slate-800 outline-none focus:border-indigo-400"
+                >
+                  <option value="Non-AC">Non-AC</option>
+                  <option value="AC">AC</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 border-t border-slate-100 pt-4 mt-4">
               <div>
                 <label className="block text-xs text-slate-600 font-bold uppercase tracking-wide mb-1">Target Date</label>
                 <input
@@ -114,9 +126,9 @@ export default function FacilityBooking({
                   onChange={(e) => setBookingForm({ ...bookingForm, slot: e.target.value })}
                   className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2.5 text-sm text-slate-800 outline-none focus:border-indigo-400"
                 >
-                  <option value="09:00 AM - 01:00 PM">09:00 AM - 01:00 PM</option>
-                  <option value="02:00 PM - 06:00 PM">02:00 PM - 06:00 PM</option>
-                  <option value="06:30 PM - 10:30 PM">06:30 PM - 10:30 PM</option>
+                  <option value="Morning (half day)">Morning (half day)</option>
+                  <option value="Evening (half day)">Evening (half day)</option>
+                  <option value="Full day">Full day</option>
                 </select>
               </div>
             </div>
@@ -224,7 +236,7 @@ export default function FacilityBooking({
                 🛡️ Financial & Application Review Desk ({bookings.filter((b: any) => b.status === 'Pending').length} Pending)
               </h4>
               
-              <div className="space-y-3 max-h-72 overflow-y-auto pr-2 custom-scrollbar">
+              <div className="space-y-3 max-h-72 overflow-y-auto hide-scrollbar">
                 {bookings.filter((b: any) => b.status === 'Pending').length === 0 && <p className="text-xs text-slate-400">All applications processed.</p>}
                 {bookings.filter((b: any) => b.status === 'Pending').map((pending: any) => (
                   <div key={pending.id} className="bg-slate-900 border border-slate-700 p-4 rounded-lg flex flex-col gap-3">
@@ -232,7 +244,7 @@ export default function FacilityBooking({
                       <div>
                         <span className="font-bold text-sm text-slate-100">{pending.memberName} <span className="text-[10px] text-slate-500">({pending.employeeCode})</span></span>
                         <p className="text-xs text-amber-400 font-semibold">{pending.userCategory} {pending.forumName ? `— ${pending.forumName}` : ''}</p>
-                        <p className="text-xs text-slate-400 mt-1">Requested: <strong className="text-slate-200">{pending.date} | {pending.slot}</strong></p>
+                        <p className="text-xs text-slate-400 mt-1">Requested: <strong className="text-slate-200">{pending.date} | {pending.slot} ({pending.acPreference || 'Non-AC'})</strong></p>
                         {pending.contactNo && <p className="text-xs text-slate-500 mt-0.5">📞 {pending.contactNo}</p>}
                       </div>
                     </div>
@@ -259,7 +271,7 @@ export default function FacilityBooking({
 
           <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
             <h4 className="text-base font-bold text-slate-800 mb-4 pb-2 border-b border-slate-100">📋 Allocation Registry Logs</h4>
-            <div className="space-y-3">
+            <div className="space-y-3 max-h-[400px] overflow-y-auto hide-scrollbar">
               {bookings.map((booking: any) => (
                 <div key={booking.id} className={`p-4 rounded-xl border flex justify-between items-center ${booking.status === 'Approved' ? 'bg-emerald-50/50 border-emerald-100' : booking.status === 'Declined' ? 'bg-rose-50/50 border-rose-100' : 'bg-slate-50 border-slate-200'}`}>
                   <div>

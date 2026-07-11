@@ -6,6 +6,7 @@ import FrontDesk from '@/components/features/FrontDesk';
 import Executives from '@/components/features/Executives';
 import SocialFeed from '@/components/features/SocialFeed';
 import FacilityBooking from '@/components/features/FacilityBooking';
+import FormsAndRules from '@/components/features/FormsAndRules';
 import { uploadFile } from '@/lib/client-utils';
 
 export default function App() {
@@ -227,7 +228,7 @@ export default function App() {
   
   const getDayStatus = (dayNum: number) => {
     const dateStr = `2026-07-${dayNum.toString().padStart(2, '0')}`;
-    const dayBookings = bookings.filter((b: any) => b.date === dateStr && b.status === 'Approved');
+    const dayBookings = (Array.isArray(bookings) ? bookings : []).filter((b: any) => b.date === dateStr && b.status === 'Approved');
     if (dayBookings.length === 0) return 'free';
     if (dayBookings.length >= 3) return 'full';
     return 'partial';
@@ -284,6 +285,16 @@ export default function App() {
             clubData={clubData} isAdmin={isAdmin} bookings={bookings} bookingForm={bookingForm} setBookingForm={setBookingForm}
             handleBookingSubmit={handleBookingSubmit} handlePaymentScreenshotUpload={handlePaymentScreenshotUpload} updateBookingStatus={updateBookingStatus}
             handleMediaUpload={handleMediaUpload} getDayStatus={getDayStatus} daysInMonth={daysInMonth} startDayOfWeek={startDayOfWeek}
+          />
+        )}
+
+        {activeTab === 'forms' && (
+          <FormsAndRules 
+            clubData={clubData} 
+            isAdmin={isAdmin} 
+            updateCMSField={updateCMSField} 
+            handleMediaUpload={handleMediaUpload} 
+            triggerFeedback={triggerFeedback} 
           />
         )}
       </main>

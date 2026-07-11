@@ -9,7 +9,7 @@ const protectedPaths = [
   '/api/announcements/admin'
 ];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const isProtectedPath = protectedPaths.some((path) => pathname.startsWith(path));

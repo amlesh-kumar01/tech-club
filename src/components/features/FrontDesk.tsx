@@ -185,8 +185,8 @@ export default function FrontDesk({
                 </button>
               )}
             </div>
-            <div className="space-y-4">
-              {(clubData.announcements || []).map((item: any) => (
+            <div className="space-y-4 max-h-[400px] overflow-y-auto hide-scrollbar">
+              {[...(clubData.announcements || [])].reverse().map((item: any) => (
                 <div key={item.id} className="p-4 bg-amber-50/50 border-l-4 border-amber-400 rounded-r-lg relative group text-sm text-slate-700 leading-relaxed">
                   {isAdmin && (
                     <button onClick={() => deleteAnnouncement(item.id)} className="absolute right-2 top-2 text-rose-400 hover:text-rose-600 opacity-0 group-hover:opacity-100 bg-white rounded-full p-1 shadow-sm">
@@ -213,8 +213,8 @@ export default function FrontDesk({
             )}
           </div>
 
-          <div className="space-y-4">
-            {(clubData.events || []).map((event: any) => (
+          <div className="space-y-4 max-h-[400px] overflow-y-auto hide-scrollbar">
+            {[...(clubData.events || [])].reverse().map((event: any) => (
               <div key={event.id} className="bg-slate-50 p-4 rounded-xl border border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 relative group">
                 {isAdmin && (
                   <button onClick={() => deleteEvent(event.id)} className="absolute right-2 top-2 text-rose-400 hover:text-rose-600 opacity-0 group-hover:opacity-100 bg-white rounded-full p-1 shadow-sm">
@@ -287,15 +287,15 @@ export default function FrontDesk({
             <h3 className="text-xl font-bold text-amber-950 flex items-center gap-2">🧩 Cultural Memory Board</h3>
             <p className="text-sm text-slate-500">Rearrange and piece together our beautiful family moments. Tap/Click to zoom.</p>
           </div>
-          <div className="text-xs text-amber-700 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-100 font-semibold">
-            {clubData.galleryFrames.length} Memories Rendered
+          <div className="text-xs text-amber-700 bg-amber-50 px-3 py-1 rounded-full font-bold shadow-sm">
+            {clubData?.galleryFrames?.length || 0} Memories Rendered
           </div>
         </div>
         
         <div 
           className="w-full relative z-10 grid grid-cols-4 grid-rows-3 gap-1.5 h-[400px] sm:h-[500px] lg:h-[600px] bg-slate-100 rounded-xl overflow-hidden shadow-inner p-2 sm:p-4 touch-none"
         >
-          {(clubData.galleryFrames || []).map((frame: any, idx: number) => {
+          {(clubData?.galleryFrames || []).map((frame: any, idx: number) => {
             const isSource = gridDragState.sourceId === frame.id;
             const isTarget = gridDragState.targetId === frame.id;
             

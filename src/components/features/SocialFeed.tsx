@@ -50,7 +50,7 @@ export default function SocialFeed({ feedPosts, isAdmin, createPost, deletePost,
       </form>
 
       <div className="space-y-6">
-        {feedPosts.map((post: any) => (
+        {(Array.isArray(feedPosts) ? feedPosts : []).map((post: any) => (
           <div key={post.id} className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm relative group">
             {isAdmin && (
               <button onClick={() => deletePost(post.id)} className="absolute right-4 top-4 text-rose-500 hover:text-rose-600 opacity-0 group-hover:opacity-100 z-10 bg-white/80 backdrop-blur p-1.5 rounded-full shadow-sm">
@@ -91,7 +91,7 @@ export default function SocialFeed({ feedPosts, isAdmin, createPost, deletePost,
 
             <div className="p-4 bg-slate-50 border-t border-slate-100 space-y-3">
               {post.comments.length > 0 && (
-                <div className="space-y-2.5 max-h-48 overflow-y-auto pr-1 custom-scrollbar">
+                <div className="space-y-2.5 max-h-48 overflow-y-auto hide-scrollbar">
                   {post.comments.map((comment: any, index: number) => (
                     <div key={index} className="bg-white border border-slate-200 p-2.5 rounded-lg text-xs shadow-sm">
                       <span className="font-bold text-slate-800 block mb-0.5">{comment.author}</span>
