@@ -62,7 +62,7 @@ export default function Header({ activeTab, setActiveTab, isAdmin, setIsAdmin, c
           </div>
           <div className="flex flex-wrap items-center justify-center gap-2">
             <div className="hidden md:flex items-center gap-1">
-              {['home', 'feed', 'booking', 'forms'].map((tab) => (
+              {['home', 'feed', 'booking', 'execs', 'forms'].map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
@@ -75,6 +75,7 @@ export default function Header({ activeTab, setActiveTab, isAdmin, setIsAdmin, c
                   {tab === 'home' && 'Front Desk'}
                   {tab === 'feed' && 'Social Feed'}
                   {tab === 'booking' && 'Facility Booking'}
+                  {tab === 'execs' && 'Executives'}
                   {tab === 'forms' && 'Forms & Rules'}
                 </button>
               ))}
